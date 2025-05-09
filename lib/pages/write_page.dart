@@ -114,7 +114,7 @@ class _WritePageState extends State<WritePage> {
                 child: Container(
                   height: 60,
                   decoration: BoxDecoration(
-                    color: Color(0xFFF5F5F5),
+                    color: Colors.yellow,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -156,7 +156,7 @@ class _WritePageState extends State<WritePage> {
                   hintText: '제목',
                   hintStyle: TextStyle(color: Color(0xFF747779), fontSize: 16),
                   filled: true,
-                  fillColor: Color(0xFFF5F5F5),
+                  fillColor: Colors.yellow,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
@@ -191,7 +191,7 @@ class _WritePageState extends State<WritePage> {
                     hintText: '내용을 입력하세요',
                     hintStyle: TextStyle(color: Color(0xFF747779), fontSize: 16),
                     filled: true,
-                    fillColor: Color(0xFFF5F5F5),
+                    fillColor: Colors.yellow,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
                       borderSide: BorderSide.none,

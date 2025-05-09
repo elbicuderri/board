@@ -36,56 +36,100 @@ class _PostListPageState extends State<PostListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('게시판'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: _navigateToWritePage,
+      body: SafeArea(
+        top: true,
+        bottom: false,
+        child: Column(
+          children: [
+            PostListPageBar(onAdd: _navigateToWritePage),
+            SizedBox(height: 10),
+            Expanded(
+              child: _posts.isEmpty
+                  ? Center(child: Text('등록된 글이 없습니다.'))
+                  : ListView.builder(
+                      itemCount: _posts.length,
+                      itemBuilder: (context, index) {
+                        final post = _posts[index];
+                        return Card(
+                          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          color: Colors.yellow,
+                          child: ListTile(
+                            title: Row(
+                              children: [
+                                Text(
+                                  post.category,
+                                  style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(post.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  _posts.removeAt(index);
+                                });
+                              },
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PostPage(post: post),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class PostListPageBar extends StatelessWidget {
+  final VoidCallback onAdd;
+  const PostListPageBar({super.key, required this.onAdd});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: kToolbarHeight,
+      decoration: BoxDecoration(
+        color: Colors.yellow,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: Offset(0, 2),
           ),
         ],
       ),
-      body: _posts.isEmpty
-          ? Center(child: Text('등록된 글이 없습니다.'))
-          : ListView.builder(
-              itemCount: _posts.length,
-              itemBuilder: (context, index) {
-                final post = _posts[index];
-                return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: ListTile(
-                    title: Row(
-                      children: [
-                        Text(
-                          post.category,
-                          style: TextStyle(color: Colors.blueGrey, fontSize: 12),
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text(post.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        setState(() {
-                          _posts.removeAt(index);
-                        });
-                      },
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PostPage(post: post),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Center(
+            child: Text(
+              '게시판',
+              style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
             ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              icon: Icon(Icons.add, color: Colors.black),
+              onPressed: onAdd,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
