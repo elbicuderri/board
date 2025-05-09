@@ -10,7 +10,7 @@ class WritePage extends StatefulWidget {
 }
 
 class _WritePageState extends State<WritePage> {
-  static const _greyColor = Color(0xFFE5E5E5);
+  // static const _greyColor = Color(0xFFE5E5E5);
   final FocusNode _titleFocusNode = FocusNode();
   final FocusNode _discussionFocusNode = FocusNode();
   final TextEditingController _titleController = TextEditingController();
@@ -29,7 +29,7 @@ class _WritePageState extends State<WritePage> {
   }
 
   void onCategoryTap() async {
-    Widget createListView() {
+    Widget createCategoryList() {
       return ListView(
         shrinkWrap: true,
         children:
@@ -64,7 +64,7 @@ class _WritePageState extends State<WritePage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (context) {
-        return createListView();
+        return createCategoryList();
       },
     );
     if (result != null) {
@@ -95,133 +95,264 @@ class _WritePageState extends State<WritePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: BackButton(),
-        title: Text('글쓰기'),
-        actions: [
-          TextButton(
-            onPressed: _canSubmit ? _submit : null,
-            child: Text(
-              '등록',
-              style: TextStyle(
-                color: _canSubmit ? Colors.blue : _greyColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            WritePageBar(canSubmit: _canSubmit, submit: _submit),
+            SizedBox(height: 18),
+            CategoryField(
+              onTap: onCategoryTap,
+              selectedCategory: _selectedCategory,
+              color: Colors.red,
+              height: 56,
+              borderRadius: 16,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+            ),
+            SizedBox(height: 12),
+            TitleField(
+              controller: _titleController,
+              focusNode: _titleFocusNode,
+              onChanged: (_) => setState(() {}),
+              color: Colors.red,
+              borderRadius: 16,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              height: 56,
+            ),
+            SizedBox(height: 12),
+            ContentField(
+              controller: _discussionController,
+              focusNode: _discussionFocusNode,
+              onChanged: (_) => setState(() {}),
+              fillColor: Colors.yellow,
+              borderRadius: 16,
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              height: 580,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class WritePageBar extends StatelessWidget {
+  final bool canSubmit;
+  final VoidCallback submit;
+  const WritePageBar({
+    super.key,
+    required this.canSubmit,
+    required this.submit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: kToolbarHeight,
+      decoration: BoxDecoration(color: Colors.yellow),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          Align(alignment: Alignment.centerLeft, child: BackButton()),
+          Align(alignment: Alignment.center, child: Text('글쓰기')),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: canSubmit ? submit : null,
+              child: Text(
+                '등록',
+                style: TextStyle(
+                  color: canSubmit ? Colors.blue : Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: GestureDetector(
-                onTap: onCategoryTap,
-                child: Container(
-                  height: 60,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        _selectedCategory ?? '카테고리 선택',
-                        style: TextStyle(
-                          color:
-                              _selectedCategory == '카테고리 선택'
-                                  ? Color(0xFF747779)
-                                  : Colors.black,
-                          fontWeight:
-                              _selectedCategory == '카테고리 선택'
-                                  ? FontWeight.normal
-                                  : FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Icon(Icons.keyboard_arrow_down, color: Color(0xFF747779)),
-                    ],
-                  ),
-                ),
-              ),
+    );
+  }
+}
+
+class CategoryField extends StatelessWidget {
+  final VoidCallback onTap;
+  final String? selectedCategory;
+  final Color color;
+  final double height;
+  final double borderRadius;
+  final EdgeInsetsGeometry? padding;
+
+  const CategoryField({
+    super.key,
+    required this.onTap,
+    required this.selectedCategory,
+    this.color = Colors.yellow,
+    this.height = 56,
+    this.borderRadius = 16,
+    this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: SizedBox(
+        height: height,
+        child: TextField(
+          readOnly: true,
+          onTap: onTap,
+          controller: TextEditingController(
+            text: selectedCategory ?? '카테고리 선택',
+          ),
+          style: TextStyle(
+            color:
+                selectedCategory == '카테고리 선택'
+                    ? Color(0xFF747779)
+                    : Colors.black,
+            fontWeight:
+                selectedCategory == '카테고리 선택'
+                    ? FontWeight.normal
+                    : FontWeight.bold,
+            fontSize: 16,
+          ),
+          decoration: InputDecoration(
+            hintText: '카테고리 선택',
+            hintStyle: TextStyle(color: Color(0xFF747779), fontSize: 16),
+            filled: true,
+            fillColor: color,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+              borderSide: BorderSide.none,
             ),
-            SizedBox(height: 12),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              child: TextField(
-                controller: _titleController,
-                focusNode: _titleFocusNode,
-                style: TextStyle(
-                  color: Color(0xFF000000),
-                  fontWeight:
-                      _titleFocusNode.hasFocus
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                ),
-                decoration: InputDecoration(
-                  hintText: '제목',
-                  hintStyle: TextStyle(color: Color(0xFF747779), fontSize: 16),
-                  filled: true,
-                  fillColor: Colors.yellow,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Colors.black, width: 2.0),
-                  ),
-                  contentPadding: EdgeInsets.all(12),
-                ),
-                onChanged: (_) => setState(() {}),
-              ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+              borderSide: BorderSide(color: Colors.black, width: 2.0),
             ),
-            SizedBox(height: 12),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: TextField(
-                  controller: _discussionController,
-                  focusNode: _discussionFocusNode,
-                  maxLines: null,
-                  expands: true,
-                  textAlignVertical: TextAlignVertical.top,
-                  style: TextStyle(
-                    color: Color(0xFF000000),
-                    fontWeight:
-                        _discussionFocusNode.hasFocus
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                  ),
-                  decoration: InputDecoration(
-                    hintText: '내용을 입력하세요',
-                    hintStyle: TextStyle(
-                      color: Color(0xFF747779),
-                      fontSize: 16,
-                    ),
-                    filled: true,
-                    fillColor: Colors.yellow,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Colors.black, width: 2.0),
-                    ),
-                    contentPadding: EdgeInsets.all(12),
-                  ),
-                  onChanged: (_) => setState(() {}),
-                ),
-              ),
+            contentPadding: EdgeInsets.all(12),
+            suffixIcon: Icon(
+              Icons.keyboard_arrow_down,
+              color: Color(0xFF747779),
             ),
-          ],
+          ),
+          enableInteractiveSelection: false,
+          showCursor: false,
+        ),
+      ),
+    );
+  }
+}
+
+class TitleField extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final ValueChanged<String>? onChanged;
+  final Color color;
+  final double borderRadius;
+  final EdgeInsetsGeometry? padding;
+  final double height;
+
+  const TitleField({
+    super.key,
+    required this.controller,
+    required this.focusNode,
+    this.onChanged,
+    this.color = Colors.yellow,
+    this.borderRadius = 8,
+    this.padding,
+    this.height = 56,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: SizedBox(
+        height: height,
+        child: TextField(
+          controller: controller,
+          focusNode: focusNode,
+          style: TextStyle(
+            color: Color(0xFF000000),
+            fontSize: 16,
+            fontWeight:
+                focusNode.hasFocus ? FontWeight.bold : FontWeight.normal,
+          ),
+          decoration: InputDecoration(
+            hintText: '제목',
+            hintStyle: TextStyle(color: Color(0xFF747779), fontSize: 16),
+            filled: true,
+            fillColor: color,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+              borderSide: BorderSide(color: Colors.black, width: 2.0),
+            ),
+            contentPadding: EdgeInsets.all(12),
+          ),
+          onChanged: onChanged,
+        ),
+      ),
+    );
+  }
+}
+
+class ContentField extends StatelessWidget {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final ValueChanged<String>? onChanged;
+  final Color fillColor;
+  final double borderRadius;
+  final EdgeInsetsGeometry? padding;
+  final double height;
+
+  const ContentField({
+    super.key,
+    required this.controller,
+    required this.focusNode,
+    this.onChanged,
+    this.fillColor = Colors.yellow,
+    this.borderRadius = 8,
+    this.padding,
+    this.height = 100,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding ?? EdgeInsets.zero,
+      child: SizedBox(
+        height: height,
+        child: TextField(
+          controller: controller,
+          focusNode: focusNode,
+          maxLines: null,
+          expands: true,
+          textAlignVertical: TextAlignVertical.top,
+          style: TextStyle(
+            color: Color(0xFF000000),
+            fontWeight:
+                focusNode.hasFocus ? FontWeight.bold : FontWeight.normal,
+          ),
+          decoration: InputDecoration(
+            hintText: '내용을 입력하세요',
+            hintStyle: TextStyle(color: Color(0xFF747779), fontSize: 16),
+            filled: true,
+            fillColor: fillColor,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(borderRadius),
+              borderSide: BorderSide(color: Colors.black, width: 2.0),
+            ),
+            contentPadding: EdgeInsets.all(12),
+          ),
+          onChanged: onChanged,
         ),
       ),
     );
