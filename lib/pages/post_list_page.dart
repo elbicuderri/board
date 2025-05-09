@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'write_page.dart';
 import 'post_page.dart';
+import 'login_page.dart';
 
 class Post {
   final String category;
@@ -46,64 +47,62 @@ class _PostListPageState extends State<PostListPage> {
             PostListPageBar(onAdd: _navigateToWritePage),
             SizedBox(height: 10),
             Expanded(
-              child:
-                  _posts.isEmpty
-                      ? Center(child: Text('등록된 글이 없습니다.'))
-                      : ListView.builder(
-                        itemCount: _posts.length,
-                        itemBuilder: (context, index) {
-                          final post = _posts[index];
-                          return Card(
-                            margin: EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 6,
+              child: _posts.isEmpty
+                  ? Center(child: Text('등록된 글이 없습니다.'))
+                  : ListView.builder(
+                      itemCount: _posts.length,
+                      itemBuilder: (context, index) {
+                        final post = _posts[index];
+                        return Card(
+                          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          color: Colors.yellow,
+                          child: ListTile(
+                            title: Row(
+                              children: [
+                                Text(
+                                  post.category,
+                                  style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+                                ),
+                                SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(post.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                              ],
                             ),
-                            color: Colors.yellow,
-                            child: ListTile(
-                              title: Row(
-                                children: [
-                                  Text(
-                                    post.category,
-                                    style: TextStyle(
-                                      color: Colors.blueGrey,
-                                      fontSize: 12,
-                                    ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PostPage(
+                                    post: post,
+                                    loggedInId: widget.loggedInId,
+                                    onDelete: () {
+                                      setState(() {
+                                        _posts.removeAt(index);
+                                      });
+                                      Navigator.pop(context);
+                                    },
                                   ),
-                                  SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      post.title,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => PostPage(
-                                      post: post,
-                                      loggedInId: widget.loggedInId,
-                                      onDelete: () {
-                                        setState(() {
-                                          _posts.removeAt(index);
-                                        });
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => LoginPage()),
+          );
+        },
+        child: Icon(Icons.logout),
+        tooltip: '로그아웃',
       ),
     );
   }
