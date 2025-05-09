@@ -6,11 +6,13 @@ class Post {
   final String category;
   final String title;
   final String content;
-  Post({required this.category, required this.title, required this.content});
+  final String author;
+  Post({required this.category, required this.title, required this.content, required this.author});
 }
 
 class PostListPage extends StatefulWidget {
-  const PostListPage({super.key});
+  final String loggedInId;
+  const PostListPage({super.key, required this.loggedInId});
 
   @override
   State<PostListPage> createState() => _PostListPageState();
@@ -23,7 +25,7 @@ class _PostListPageState extends State<PostListPage> {
     final newPost = await Navigator.push<Post>(
       context,
       MaterialPageRoute(
-        builder: (context) => WritePage(),
+        builder: (context) => WritePage(author: widget.loggedInId),
       ),
     );
     if (newPost != null) {
@@ -44,48 +46,61 @@ class _PostListPageState extends State<PostListPage> {
             PostListPageBar(onAdd: _navigateToWritePage),
             SizedBox(height: 10),
             Expanded(
-              child: _posts.isEmpty
-                  ? Center(child: Text('등록된 글이 없습니다.'))
-                  : ListView.builder(
-                      itemCount: _posts.length,
-                      itemBuilder: (context, index) {
-                        final post = _posts[index];
-                        return Card(
-                          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          color: Colors.yellow,
-                          child: ListTile(
-                            title: Row(
-                              children: [
-                                Text(
-                                  post.category,
-                                  style: TextStyle(color: Colors.blueGrey, fontSize: 12),
-                                ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(post.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                                ),
-                              ],
+              child:
+                  _posts.isEmpty
+                      ? Center(child: Text('등록된 글이 없습니다.'))
+                      : ListView.builder(
+                        itemCount: _posts.length,
+                        itemBuilder: (context, index) {
+                          final post = _posts[index];
+                          return Card(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
                             ),
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                setState(() {
-                                  _posts.removeAt(index);
-                                });
+                            color: Colors.yellow,
+                            child: ListTile(
+                              title: Row(
+                                children: [
+                                  Text(
+                                    post.category,
+                                    style: TextStyle(
+                                      color: Colors.blueGrey,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      post.title,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PostPage(
+                                      post: post,
+                                      loggedInId: widget.loggedInId,
+                                      onDelete: () {
+                                        setState(() {
+                                          _posts.removeAt(index);
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                );
                               },
                             ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PostPage(post: post),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      ),
             ),
           ],
         ),
@@ -118,7 +133,11 @@ class PostListPageBar extends StatelessWidget {
           Center(
             child: Text(
               '게시판',
-              style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Align(

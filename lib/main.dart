@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/post_list_page.dart';
+import 'pages/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,8 +10,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: PostListPage(),
-    );
+    return MaterialApp(home: LoginPage());
   }
 }

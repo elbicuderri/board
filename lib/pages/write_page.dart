@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'post_list_page.dart';
 
 class WritePage extends StatefulWidget {
-  const WritePage({super.key});
+  final String author;
+  const WritePage({super.key, required this.author});
 
   @override
   State<WritePage> createState() => _WritePageState();
@@ -36,25 +37,29 @@ class _WritePageState extends State<WritePage> {
       builder: (context) {
         return ListView(
           shrinkWrap: true,
-          children: _categories.map((category) {
-            return ListTile(
-              title: Text(
-                category,
-                style: TextStyle(
-                  color: category == _selectedCategory
-                      ? Colors.black
-                      : Color(0xFF747779),
-                  fontWeight: category == _selectedCategory
-                      ? FontWeight.bold
-                      : FontWeight.normal,
-                ),
-              ),
-              trailing: category == _selectedCategory
-                  ? Icon(Icons.check, color: Colors.blue)
-                  : null,
-              onTap: () => Navigator.pop(context, category),
-            );
-          }).toList(),
+          children:
+              _categories.map((category) {
+                return ListTile(
+                  title: Text(
+                    category,
+                    style: TextStyle(
+                      color:
+                          category == _selectedCategory
+                              ? Colors.black
+                              : Color(0xFF747779),
+                      fontWeight:
+                          category == _selectedCategory
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                    ),
+                  ),
+                  trailing:
+                      category == _selectedCategory
+                          ? Icon(Icons.check, color: Colors.blue)
+                          : null,
+                  onTap: () => Navigator.pop(context, category),
+                );
+              }).toList(),
         );
       },
     );
@@ -77,6 +82,7 @@ class _WritePageState extends State<WritePage> {
         category: _selectedCategory!,
         title: _titleController.text.trim(),
         content: _discussionController.text.trim(),
+        author: widget.author,
       );
       Navigator.pop(context, post);
     }
@@ -124,12 +130,14 @@ class _WritePageState extends State<WritePage> {
                       Text(
                         _selectedCategory ?? '카테고리 선택',
                         style: TextStyle(
-                          color: _selectedCategory == '카테고리 선택'
-                              ? Color(0xFF747779)
-                              : Colors.black,
-                          fontWeight: _selectedCategory == '카테고리 선택'
-                              ? FontWeight.normal
-                              : FontWeight.bold,
+                          color:
+                              _selectedCategory == '카테고리 선택'
+                                  ? Color(0xFF747779)
+                                  : Colors.black,
+                          fontWeight:
+                              _selectedCategory == '카테고리 선택'
+                                  ? FontWeight.normal
+                                  : FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
@@ -189,7 +197,10 @@ class _WritePageState extends State<WritePage> {
                   ),
                   decoration: InputDecoration(
                     hintText: '내용을 입력하세요',
-                    hintStyle: TextStyle(color: Color(0xFF747779), fontSize: 16),
+                    hintStyle: TextStyle(
+                      color: Color(0xFF747779),
+                      fontSize: 16,
+                    ),
                     filled: true,
                     fillColor: Colors.yellow,
                     border: OutlineInputBorder(

@@ -3,7 +3,9 @@ import 'post_list_page.dart';
 
 class PostPage extends StatelessWidget {
   final Post post;
-  const PostPage({super.key, required this.post});
+  final String loggedInId;
+  final VoidCallback? onDelete;
+  const PostPage({super.key, required this.post, required this.loggedInId, this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,10 @@ class PostPage extends StatelessWidget {
                       Expanded(
                         child: Text(
                           post.title,
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                       Text(
@@ -34,11 +39,30 @@ class PostPage extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 0),
-                  Divider(height: 14, thickness: 1),
+                  Divider(height: 14, thickness: 1, color: Colors.red),
                   SizedBox(height: 18),
                   Expanded(
                     child: SingleChildScrollView(
-                      child: Text(post.content, style: TextStyle(fontSize: 16)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(post.content, style: TextStyle(fontSize: 16)),
+                          if (post.author == loggedInId && onDelete != null) ...[
+                            SizedBox(height: 24),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: ElevatedButton.icon(
+                                onPressed: onDelete,
+                                icon: Icon(Icons.delete, color: Colors.white),
+                                label: Text('삭제', style: TextStyle(color: Colors.white)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -84,7 +108,11 @@ class PostPageBar extends StatelessWidget {
             Center(
               child: Text(
                 '게시글 보기',
-                style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             // 오른쪽에 액션이 필요하다면 아래 코드의 주석을 해제하세요.
