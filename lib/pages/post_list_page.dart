@@ -41,6 +41,26 @@ class _PostListPageState extends State<PostListPage> {
     }
   }
 
+  void onPostCardTap(int index) {
+    final post = _posts[index];
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => PostPage(
+              post: post,
+              loggedInId: widget.loggedInId,
+              onDelete: () {
+                setState(() {
+                  _posts.removeAt(index);
+                });
+                Navigator.pop(context);
+              },
+            ),
+      ),
+    );
+  }
+
   Widget buildPostList() {
     return ListView.builder(
       itemCount: _posts.length,
@@ -48,26 +68,9 @@ class _PostListPageState extends State<PostListPage> {
         final post = _posts[index];
         return PostCard(
           post: post,
-          color: Colors.yellow,
+          onTap: () => onPostCardTap(index),
           margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) => PostPage(
-                      post: post,
-                      loggedInId: widget.loggedInId,
-                      onDelete: () {
-                        setState(() {
-                          _posts.removeAt(index);
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-              ),
-            );
-          },
+          color: Colors.yellow,
         );
       },
     );
@@ -78,7 +81,7 @@ class _PostListPageState extends State<PostListPage> {
     return Scaffold(
       body: SafeArea(
         top: true,
-        bottom: false,
+        bottom: true,
         child: Column(
           children: [
             PostListPageBar(onAdd: _navigateToWritePage),
@@ -115,20 +118,12 @@ class PostListPageBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: kToolbarHeight,
-      decoration: BoxDecoration(
-        color: Colors.yellow,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
+      decoration: BoxDecoration(color: Colors.yellow),
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Center(
+          Align(
+            alignment: Alignment.center,
             child: Text(
               '게시판',
               style: TextStyle(
