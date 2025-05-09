@@ -14,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
   String? _error;
-  Map<String, dynamic>? _userData;
+  List<dynamic>? _userData;
 
   Future<void> _loadUserData() async {
     final String data = await rootBundle.loadString('lib/data/user_data.json');
@@ -33,7 +33,10 @@ class _LoginPageState extends State<LoginPage> {
     if (_userData == null) return;
     final id = _idController.text.trim();
     final pw = _pwController.text.trim();
-    if (id == _userData!["id"] && pw == _userData!["password"]) {
+    final found = _userData!.any((user) =>
+      user["id"] == id && user["password"] == pw
+    );
+    if (found) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => PostListPage(loggedInId: id)),
