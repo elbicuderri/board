@@ -8,7 +8,12 @@ class Post {
   final String title;
   final String content;
   final String author;
-  Post({required this.category, required this.title, required this.content, required this.author});
+  Post({
+    required this.category,
+    required this.title,
+    required this.content,
+    required this.author,
+  });
 }
 
 class PostListPage extends StatefulWidget {
@@ -36,6 +41,38 @@ class _PostListPageState extends State<PostListPage> {
     }
   }
 
+  Widget buildPostList() {
+    return ListView.builder(
+      itemCount: _posts.length,
+      itemBuilder: (context, index) {
+        final post = _posts[index];
+        return PostCard(
+          post: post,
+          color: Colors.yellow,
+          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    (context) => PostPage(
+                      post: post,
+                      loggedInId: widget.loggedInId,
+                      onDelete: () {
+                        setState(() {
+                          _posts.removeAt(index);
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,62 +84,24 @@ class _PostListPageState extends State<PostListPage> {
             PostListPageBar(onAdd: _navigateToWritePage),
             SizedBox(height: 10),
             Expanded(
-              child: _posts.isEmpty
-                  ? Center(child: Text('등록된 글이 없습니다.'))
-                  : ListView.builder(
-                      itemCount: _posts.length,
-                      itemBuilder: (context, index) {
-                        final post = _posts[index];
-                        return Card(
-                          margin: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          color: Colors.yellow,
-                          child: ListTile(
-                            title: Row(
-                              children: [
-                                Text(
-                                  post.category,
-                                  style: TextStyle(color: Colors.blueGrey, fontSize: 12),
-                                ),
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(post.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                                ),
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PostPage(
-                                    post: post,
-                                    loggedInId: widget.loggedInId,
-                                    onDelete: () {
-                                      setState(() {
-                                        _posts.removeAt(index);
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
+              child:
+                  _posts.isEmpty
+                      ? Center(child: Text('등록된 글이 없습니다.'))
+                      : buildPostList(),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: '로그아웃',
         onPressed: () {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
           );
         },
-        child: Icon(Icons.logout),
-        tooltip: '로그아웃',
+        backgroundColor: Colors.red,
+        child: Text('logout'),
       ),
     );
   }
@@ -150,4 +149,33 @@ class PostListPageBar extends StatelessWidget {
       ),
     );
   }
+}
+
+class PostCard extends Card {
+  PostCard({
+    super.key,
+    required Post post,
+    required VoidCallback onTap,
+    required EdgeInsetsGeometry super.margin,
+    required Color super.color,
+  }) : super(
+         child: ListTile(
+           title: Row(
+             children: [
+               Text(
+                 post.category,
+                 style: TextStyle(color: Colors.blueGrey, fontSize: 12),
+               ),
+               SizedBox(width: 8),
+               Expanded(
+                 child: Text(
+                   post.title,
+                   style: TextStyle(fontWeight: FontWeight.bold),
+                 ),
+               ),
+             ],
+           ),
+           onTap: onTap,
+         ),
+       );
 }

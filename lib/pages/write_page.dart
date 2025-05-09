@@ -29,38 +29,42 @@ class _WritePageState extends State<WritePage> {
   }
 
   void onCategoryTap() async {
+    Widget createListView() {
+      return ListView(
+        shrinkWrap: true,
+        children:
+            _categories.map((category) {
+              return ListTile(
+                title: Text(
+                  category,
+                  style: TextStyle(
+                    color:
+                        category == _selectedCategory
+                            ? Colors.black
+                            : Color(0xFF747779),
+                    fontWeight:
+                        category == _selectedCategory
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                  ),
+                ),
+                trailing:
+                    category == _selectedCategory
+                        ? Icon(Icons.check, color: Colors.blue)
+                        : null,
+                onTap: () => Navigator.pop(context, category),
+              );
+            }).toList(),
+      );
+    }
+
     final result = await showModalBottomSheet<String>(
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
       builder: (context) {
-        return ListView(
-          shrinkWrap: true,
-          children:
-              _categories.map((category) {
-                return ListTile(
-                  title: Text(
-                    category,
-                    style: TextStyle(
-                      color:
-                          category == _selectedCategory
-                              ? Colors.black
-                              : Color(0xFF747779),
-                      fontWeight:
-                          category == _selectedCategory
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                    ),
-                  ),
-                  trailing:
-                      category == _selectedCategory
-                          ? Icon(Icons.check, color: Colors.blue)
-                          : null,
-                  onTap: () => Navigator.pop(context, category),
-                );
-              }).toList(),
-        );
+        return createListView();
       },
     );
     if (result != null) {

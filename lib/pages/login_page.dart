@@ -33,8 +33,8 @@ class _LoginPageState extends State<LoginPage> {
     if (_userData == null) return;
     final id = _idController.text.trim();
     final pw = _pwController.text.trim();
-    final found = _userData!.any((user) =>
-      user["id"] == id && user["password"] == pw
+    final found = _userData!.any(
+      (user) => user["id"] == id && user["password"] == pw,
     );
     if (found) {
       Navigator.pushReplacement(
@@ -52,12 +52,16 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
+        heightFactor: 2.5,
         child: Padding(
-          padding: const EdgeInsets.all(32.0),
+          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('로그인', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+              Text(
+                '로그인',
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
               SizedBox(height: 32),
               TextField(
                 controller: _idController,

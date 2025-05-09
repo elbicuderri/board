@@ -5,7 +5,12 @@ class PostPage extends StatelessWidget {
   final Post post;
   final String loggedInId;
   final VoidCallback? onDelete;
-  const PostPage({super.key, required this.post, required this.loggedInId, this.onDelete});
+  const PostPage({
+    super.key,
+    required this.post,
+    required this.loggedInId,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +37,18 @@ class PostPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        post.category,
-                        style: TextStyle(fontSize: 14, color: Colors.blueGrey),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Text(
+                          post.category,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 0),
                   Divider(height: 14, thickness: 1, color: Colors.red),
                   SizedBox(height: 18),
                   Expanded(
@@ -47,20 +57,6 @@ class PostPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(post.content, style: TextStyle(fontSize: 16)),
-                          if (post.author == loggedInId && onDelete != null) ...[
-                            SizedBox(height: 24),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: ElevatedButton.icon(
-                                onPressed: onDelete,
-                                icon: Icon(Icons.delete, color: Colors.white),
-                                label: Text('삭제', style: TextStyle(color: Colors.white)),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.red,
-                                ),
-                              ),
-                            ),
-                          ],
                         ],
                       ),
                     ),
@@ -71,6 +67,15 @@ class PostPage extends StatelessWidget {
           ),
         ],
       ),
+      floatingActionButton:
+          (post.author == loggedInId && onDelete != null)
+              ? FloatingActionButton.extended(
+                onPressed: onDelete,
+                backgroundColor: Colors.red,
+                icon: Icon(Icons.delete, color: Colors.white),
+                label: Text('삭제', style: TextStyle(color: Colors.white)),
+              )
+              : null,
     );
   }
 }
@@ -85,16 +90,7 @@ class PostPageBar extends StatelessWidget {
       padding: EdgeInsets.only(top: topPadding),
       child: Container(
         height: kToolbarHeight,
-        decoration: BoxDecoration(
-          color: Colors.yellow,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
+        decoration: BoxDecoration(color: Colors.yellow),
         child: Stack(
           alignment: Alignment.center,
           children: [
