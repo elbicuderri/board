@@ -332,6 +332,7 @@ class ContentField extends StatelessWidget {
           focusNode: focusNode,
           maxLines: null,
           expands: true,
+          onChanged: onChanged,
           textAlignVertical: TextAlignVertical.top,
           style: TextStyle(
             color: Color(0xFF000000),
@@ -353,7 +354,6 @@ class ContentField extends StatelessWidget {
             ),
             contentPadding: EdgeInsets.all(12),
           ),
-          onChanged: onChanged,
         ),
       ),
     );

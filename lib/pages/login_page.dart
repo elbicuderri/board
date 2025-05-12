@@ -13,6 +13,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _idController = TextEditingController();
   final TextEditingController _pwController = TextEditingController();
+  final FocusNode _idFocusNode = FocusNode();
   String? _error;
   List<dynamic>? _userData;
 
@@ -27,6 +28,14 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _loadUserData();
+  }
+
+  @override
+  void dispose() {
+    _idController.dispose();
+    _pwController.dispose();
+    _idFocusNode.dispose();
+    super.dispose();
   }
 
   void _login() {
@@ -66,9 +75,20 @@ class _LoginPageState extends State<LoginPage> {
               // id text field
               TextField(
                 controller: _idController,
+                focusNode: _idFocusNode,
+                style: TextStyle(
+                  fontWeight:
+                      _idFocusNode.hasFocus
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                ),
                 decoration: InputDecoration(
                   labelText: '아이디',
+                  labelStyle: TextStyle(color: Color(0xFF747779)),
                   border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  ),
                 ),
               ),
               SizedBox(height: 16),
@@ -78,7 +98,11 @@ class _LoginPageState extends State<LoginPage> {
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: '비밀번호',
+                  labelStyle: TextStyle(color: Color(0xFF747779)),
                   border: OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black, width: 2.0),
+                  ),
                 ),
               ),
               if (_error != null) ...[
@@ -91,7 +115,13 @@ class _LoginPageState extends State<LoginPage> {
                 // width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _userData == null ? null : _login,
-                  child: Text('로그인'),
+                  style: ElevatedButton.styleFrom(
+                    side: BorderSide(color: Colors.green, width: 2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                  ),
+                  child: Text('login', style: TextStyle(color: Colors.black)),
                 ),
               ),
             ],

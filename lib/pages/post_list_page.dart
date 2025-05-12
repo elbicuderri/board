@@ -8,6 +8,7 @@ class Post {
   final String title;
   final String content;
   final String author;
+
   Post({
     required this.category,
     required this.title,
@@ -18,6 +19,7 @@ class Post {
 
 class PostListPage extends StatefulWidget {
   final String loggedInId;
+
   const PostListPage({super.key, required this.loggedInId});
 
   @override

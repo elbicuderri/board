@@ -5,6 +5,7 @@ class PostPage extends StatelessWidget {
   final Post post;
   final String loggedInId;
   final VoidCallback? onDelete;
+
   const PostPage({
     super.key,
     required this.post,
