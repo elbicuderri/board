@@ -46,29 +46,31 @@ class _PostPageState extends State<PostPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            widget.post.title,
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(right: 10),
-                          child: Text(
+                    // Wrap the title row in a SingleChildScrollView to handle overflow
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
                             widget.post.category,
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.blueGrey,
                             ),
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: EdgeInsets.only(left: 5, right: 10),
+                            child: Text(
+                              widget.post.title,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     Divider(height: 14, thickness: 1, color: Colors.red),
                     SizedBox(height: 18),
@@ -80,7 +82,7 @@ class _PostPageState extends State<PostPage> {
                         thumbColor: Colors.red.withValues(alpha: 0.3),
                         trackColor: Colors.grey.withValues(alpha: 0.1),
                         radius: Radius.circular(20),
-                        thickness: 5,
+                        thickness: 4,
                         thumbVisibility: true,
                         trackVisibility: true,
                         interactive: true,
@@ -92,7 +94,7 @@ class _PostPageState extends State<PostPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(right: 5),
+                                  padding: EdgeInsets.only(right: 2),
                                   child: SelectableText(
                                     widget.post.content,
                                     style: TextStyle(fontSize: 16),
