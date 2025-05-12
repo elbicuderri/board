@@ -133,8 +133,8 @@ class _PostPageState extends State<PostPage> {
               )
               : null,
       floatingActionButtonLocation: CustomFloatingActionButtonLocation(
-        offsetX: 60,
-        offsetY: 370,
+        offsetX: 20,
+        offsetY: 20,
       ),
     );
   }
@@ -183,10 +183,10 @@ class PostPageBar extends StatelessWidget {
   }
 }
 
-// Custom FloatingActionButtonLocation implementation
+// CustomFloatingActionButtonLocation 수정
 class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
-  final double offsetX; // Positive values move right, negative values move left
-  final double offsetY; // Positive values move down, negative values move up
+  final double offsetX;
+  final double offsetY;
 
   CustomFloatingActionButtonLocation({
     required this.offsetX,
@@ -195,16 +195,11 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
 
   @override
   Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
-    // Get the default position for the FloatingActionButton
-    final double fabX = scaffoldGeometry.scaffoldSize.width / 2;
-    // final double fabY =
-    //     scaffoldGeometry.scaffoldSize.height -
-    //     scaffoldGeometry.floatingActionButtonSize.height -
-    //     scaffoldGeometry.contentBottom -
-    //     16.0; // Standard bottom margin
-    final double fabY = scaffoldGeometry.scaffoldSize.height / 2;
-
-    // Return the adjusted position
-    return Offset(fabX + offsetX, fabY + offsetY);
+    final double fabX = scaffoldGeometry.scaffoldSize.width - 
+                       scaffoldGeometry.floatingActionButtonSize.width - 
+                       offsetX;
+    final double fabY = scaffoldGeometry.contentBottom - offsetY;
+    
+    return Offset(fabX, fabY);
   }
 }

@@ -94,40 +94,60 @@ class _WritePageState extends State<WritePage> {
 
   @override
   Widget build(BuildContext context) {
+    // 사용 가능한 화면 높이 계산
+    final availableHeight = MediaQuery.of(context).size.height -
+                           MediaQuery.of(context).padding.top -
+                           MediaQuery.of(context).padding.bottom -
+                           kToolbarHeight - 42; // 툴바 높이 + 여백
+                           
+    // ContentField의 높이를 계산 (최대 화면의 45%로 제한)
+    final contentHeight = availableHeight * 0.45;
+
     return Scaffold(
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             WritePageBar(canSubmit: _canSubmit, submit: _submit),
-            SizedBox(height: 18),
-            CategoryField(
-              onTap: onCategoryTap,
-              selectedCategory: _selectedCategory,
-              color: Colors.red,
-              borderRadius: 16,
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              height: 56,
-            ),
-            SizedBox(height: 12),
-            TitleField(
-              controller: _titleController,
-              focusNode: _titleFocusNode,
-              onChanged: (_) => setState(() {}),
-              color: Colors.red,
-              borderRadius: 16,
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              height: 56,
-            ),
-            SizedBox(height: 12),
-            ContentField(
-              controller: _discussionController,
-              focusNode: _discussionFocusNode,
-              onChanged: (_) => setState(() {}),
-              fillColor: Colors.yellow,
-              borderRadius: 16,
-              padding: EdgeInsets.symmetric(horizontal: 16),
-              height: MediaQuery.of(context).size.height * 0.6,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 16),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 18),
+                      CategoryField(
+                        onTap: onCategoryTap,
+                        selectedCategory: _selectedCategory,
+                        color: Colors.red,
+                        borderRadius: 16,
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        height: 56,
+                      ),
+                      SizedBox(height: 12),
+                      TitleField(
+                        controller: _titleController,
+                        focusNode: _titleFocusNode,
+                        onChanged: (_) => setState(() {}),
+                        color: Colors.red,
+                        borderRadius: 16,
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        height: 56,
+                      ),
+                      SizedBox(height: 12),
+                      ContentField(
+                        controller: _discussionController,
+                        focusNode: _discussionFocusNode,
+                        onChanged: (_) => setState(() {}),
+                        fillColor: Colors.yellow,
+                        borderRadius: 16,
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        height: contentHeight,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),

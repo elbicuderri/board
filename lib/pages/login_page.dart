@@ -61,69 +61,88 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 32),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: 240),
-              Text(
-                '로그인',
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 32),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height - 
+                          MediaQuery.of(context).padding.top - 
+                          MediaQuery.of(context).padding.bottom - 40,
               ),
-              SizedBox(height: 32),
-              // id text field
-              TextField(
-                controller: _idController,
-                focusNode: _idFocusNode,
-                style: TextStyle(
-                  fontWeight:
-                      _idFocusNode.hasFocus
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                ),
-                decoration: InputDecoration(
-                  labelText: '아이디',
-                  labelStyle: TextStyle(color: Color(0xFF747779)),
-                  border: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 40),
+                  Text(
+                    '로그인',
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-              ),
-              SizedBox(height: 16),
-              // password text field
-              TextField(
-                controller: _pwController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: '비밀번호',
-                  labelStyle: TextStyle(color: Color(0xFF747779)),
-                  border: OutlineInputBorder(),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2.0),
-                  ),
-                ),
-              ),
-              if (_error != null) ...[
-                SizedBox(height: 16),
-                Text(_error!, style: TextStyle(color: Colors.red)),
-              ],
-              SizedBox(height: 24),
-              // login button
-              SizedBox(
-                child: ElevatedButton(
-                  onPressed: _userData == null ? null : _login,
-                  style: ElevatedButton.styleFrom(
-                    side: BorderSide(color: Colors.green, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(32),
+                  SizedBox(height: 32),
+                  // id text field
+                  TextField(
+                    controller: _idController,
+                    focusNode: _idFocusNode,
+                    style: TextStyle(
+                      fontWeight:
+                          _idFocusNode.hasFocus
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: '아이디',
+                      labelStyle: TextStyle(color: Color(0xFF747779)),
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 2.0),
+                      ),
                     ),
                   ),
-                  child: Text('login', style: TextStyle(color: Colors.black)),
-                ),
+                  SizedBox(height: 16),
+                  // password text field
+                  TextField(
+                    controller: _pwController,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      labelText: '비밀번호',
+                      labelStyle: TextStyle(color: Color(0xFF747779)),
+                      border: OutlineInputBorder(),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black, width: 2.0),
+                      ),
+                    ),
+                  ),
+                  if (_error != null) ...[
+                    SizedBox(height: 16),
+                    Text(_error!, 
+                      style: TextStyle(color: Colors.red),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                  SizedBox(height: 24),
+                  // login button
+                  Center(
+                    child: SizedBox(
+                      width: 150,
+                      height: 45,
+                      child: ElevatedButton(
+                        onPressed: _userData == null ? null : _login,
+                        style: ElevatedButton.styleFrom(
+                          side: BorderSide(color: Colors.green, width: 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(32),
+                          ),
+                        ),
+                        child: Text('login', style: TextStyle(color: Colors.black)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
