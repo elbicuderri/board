@@ -60,13 +60,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        heightFactor: 2.5,
+      body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 32),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              SizedBox(height: 240),
               Text(
                 '로그인',
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -112,7 +112,6 @@ class _LoginPageState extends State<LoginPage> {
               SizedBox(height: 24),
               // login button
               SizedBox(
-                // width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _userData == null ? null : _login,
                   style: ElevatedButton.styleFrom(
