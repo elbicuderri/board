@@ -17,28 +17,6 @@ class PostPage extends StatefulWidget {
   State<PostPage> createState() => _PostPageState();
 }
 
-// Custom FloatingActionButtonLocation implementation
-class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
-  final double offsetX; // Positive values move right, negative values move left
-  final double offsetY; // Positive values move down, negative values move up
-
-  CustomFloatingActionButtonLocation(this.offsetX, this.offsetY);
-
-  @override
-  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
-    // Get the default position for the FloatingActionButton
-    final double fabX = scaffoldGeometry.scaffoldSize.width / 2;
-    final double fabY =
-        scaffoldGeometry.scaffoldSize.height -
-        scaffoldGeometry.floatingActionButtonSize.height -
-        scaffoldGeometry.contentBottom -
-        16.0; // Standard bottom margin
-
-    // Return the adjusted position
-    return Offset(fabX + offsetX, fabY + offsetY);
-  }
-}
-
 class _PostPageState extends State<PostPage> {
   // ScrollController for controlling the scroll position
   final ScrollController _scrollController = ScrollController();
@@ -95,10 +73,11 @@ class _PostPageState extends State<PostPage> {
                     Divider(height: 14, thickness: 1, color: Colors.red),
                     SizedBox(height: 18),
                     // Use fixed width for content to ensure scrollbar position
-                    Expanded(
+                    SizedBox(
+                      height: 620,
                       child: RawScrollbar(
                         controller: _scrollController,
-                        thumbColor: Colors.red.shade600,
+                        thumbColor: Colors.red.withValues(alpha: 0.3),
                         trackColor: Colors.grey.withValues(alpha: 0.1),
                         radius: Radius.circular(20),
                         thickness: 8,
@@ -143,9 +122,8 @@ class _PostPageState extends State<PostPage> {
               )
               : null,
       floatingActionButtonLocation: CustomFloatingActionButtonLocation(
-        MediaQuery.of(context).size.width *
-            0.1, // Move right by 10% of screen width
-        920, // Move down by 30 pixels
+        offsetX: 44,
+        offsetY: 920,
       ),
     );
   }
@@ -191,5 +169,30 @@ class PostPageBar extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+// Custom FloatingActionButtonLocation implementation
+class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
+  final double offsetX; // Positive values move right, negative values move left
+  final double offsetY; // Positive values move down, negative values move up
+
+  CustomFloatingActionButtonLocation({
+    required this.offsetX,
+    required this.offsetY,
+  });
+
+  @override
+  Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    // Get the default position for the FloatingActionButton
+    final double fabX = scaffoldGeometry.scaffoldSize.width / 2;
+    final double fabY =
+        scaffoldGeometry.scaffoldSize.height -
+        scaffoldGeometry.floatingActionButtonSize.height -
+        scaffoldGeometry.contentBottom -
+        16.0; // Standard bottom margin
+
+    // Return the adjusted position
+    return Offset(fabX + offsetX, fabY + offsetY);
   }
 }
