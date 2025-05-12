@@ -80,22 +80,23 @@ class _PostPageState extends State<PostPage> {
                         thumbColor: Colors.red.withValues(alpha: 0.3),
                         trackColor: Colors.grey.withValues(alpha: 0.1),
                         radius: Radius.circular(20),
-                        thickness: 8,
+                        thickness: 5,
                         thumbVisibility: true,
                         trackVisibility: true,
                         interactive: true,
                         child: SingleChildScrollView(
                           controller: _scrollController,
-                          child: Container(
-                            width:
-                                MediaQuery.of(context).size.width -
-                                48, // Full width minus padding
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.post.content,
-                                  style: TextStyle(fontSize: 16),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 5),
+                                  child: Text(
+                                    widget.post.content,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                                 // Add some extra space at the bottom to ensure scrollability on short content
                                 SizedBox(height: 20),
