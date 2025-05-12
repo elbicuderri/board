@@ -127,7 +127,7 @@ class _WritePageState extends State<WritePage> {
               fillColor: Colors.yellow,
               borderRadius: 16,
               padding: EdgeInsets.symmetric(horizontal: 16),
-              height: 580,
+              height: MediaQuery.of(context).size.height * 0.6,
             ),
           ],
         ),

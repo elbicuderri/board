@@ -75,8 +75,7 @@ class _PostPageState extends State<PostPage> {
                     Divider(height: 14, thickness: 1, color: Colors.red),
                     SizedBox(height: 18),
                     // Use fixed width for content to ensure scrollbar position
-                    SizedBox(
-                      height: 620,
+                    Expanded(
                       child: RawScrollbar(
                         controller: _scrollController,
                         thumbColor: Colors.red.withValues(alpha: 0.3),
