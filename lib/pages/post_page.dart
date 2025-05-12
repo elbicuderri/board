@@ -93,9 +93,18 @@ class _PostPageState extends State<PostPage> {
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(right: 5),
-                                  child: Text(
+                                  child: SelectableText(
                                     widget.post.content,
                                     style: TextStyle(fontSize: 16),
+                                    enableInteractiveSelection: true,
+                                    contextMenuBuilder: (
+                                      context,
+                                      editableTextState,
+                                    ) {
+                                      return AdaptiveTextSelectionToolbar.editableText(
+                                        editableTextState: editableTextState,
+                                      );
+                                    },
                                   ),
                                 ),
                                 // Add some extra space at the bottom to ensure scrollability on short content
@@ -123,8 +132,8 @@ class _PostPageState extends State<PostPage> {
               )
               : null,
       floatingActionButtonLocation: CustomFloatingActionButtonLocation(
-        offsetX: 44,
-        offsetY: 920,
+        offsetX: 60,
+        offsetY: 370,
       ),
     );
   }
@@ -187,11 +196,12 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
   Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
     // Get the default position for the FloatingActionButton
     final double fabX = scaffoldGeometry.scaffoldSize.width / 2;
-    final double fabY =
-        scaffoldGeometry.scaffoldSize.height -
-        scaffoldGeometry.floatingActionButtonSize.height -
-        scaffoldGeometry.contentBottom -
-        16.0; // Standard bottom margin
+    // final double fabY =
+    //     scaffoldGeometry.scaffoldSize.height -
+    //     scaffoldGeometry.floatingActionButtonSize.height -
+    //     scaffoldGeometry.contentBottom -
+    //     16.0; // Standard bottom margin
+    final double fabY = scaffoldGeometry.scaffoldSize.height / 2;
 
     // Return the adjusted position
     return Offset(fabX + offsetX, fabY + offsetY);
