@@ -66,9 +66,11 @@ class _LoginPageState extends State<LoginPage> {
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 32),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: MediaQuery.of(context).size.height - 
-                          MediaQuery.of(context).padding.top - 
-                          MediaQuery.of(context).padding.bottom - 40,
+                minHeight:
+                    MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    MediaQuery.of(context).padding.bottom -
+                    40,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -116,7 +118,8 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   if (_error != null) ...[
                     SizedBox(height: 16),
-                    Text(_error!, 
+                    Text(
+                      _error!,
                       style: TextStyle(color: Colors.red),
                       textAlign: TextAlign.center,
                     ),
@@ -135,7 +138,10 @@ class _LoginPageState extends State<LoginPage> {
                             borderRadius: BorderRadius.circular(32),
                           ),
                         ),
-                        child: Text('login', style: TextStyle(color: Colors.black)),
+                        child: Text(
+                          'login',
+                          style: TextStyle(color: Colors.black),
+                        ),
                       ),
                     ),
                   ),

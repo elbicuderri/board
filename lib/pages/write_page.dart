@@ -95,11 +95,13 @@ class _WritePageState extends State<WritePage> {
   @override
   Widget build(BuildContext context) {
     // 사용 가능한 화면 높이 계산
-    final availableHeight = MediaQuery.of(context).size.height -
-                           MediaQuery.of(context).padding.top -
-                           MediaQuery.of(context).padding.bottom -
-                           kToolbarHeight - 42; // 툴바 높이 + 여백
-                           
+    final availableHeight =
+        MediaQuery.of(context).size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom -
+        kToolbarHeight -
+        42; // 툴바 높이 + 여백
+
     // ContentField의 높이를 계산 (최대 화면의 45%로 제한)
     final contentHeight = availableHeight * 0.45;
 
@@ -223,6 +225,7 @@ class CategoryField extends StatelessWidget {
         child: TextField(
           readOnly: true,
           onTap: onTap,
+          enableInteractiveSelection: false,
           controller: TextEditingController(
             text: selectedCategory ?? '카테고리 선택',
           ),
@@ -256,7 +259,6 @@ class CategoryField extends StatelessWidget {
               color: Color(0xFF747779),
             ),
           ),
-          enableInteractiveSelection: false,
           showCursor: false,
         ),
       ),
@@ -293,6 +295,9 @@ class TitleField extends StatelessWidget {
         child: TextField(
           controller: controller,
           focusNode: focusNode,
+          enableInteractiveSelection: true,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.next,
           style: TextStyle(
             color: Color(0xFF000000),
             fontSize: 16,
@@ -315,6 +320,11 @@ class TitleField extends StatelessWidget {
             contentPadding: EdgeInsets.all(12),
           ),
           onChanged: onChanged,
+          contextMenuBuilder: (context, editableTextState) {
+            return AdaptiveTextSelectionToolbar.editableText(
+              editableTextState: editableTextState,
+            );
+          },
         ),
       ),
     );
@@ -352,6 +362,9 @@ class ContentField extends StatelessWidget {
           focusNode: focusNode,
           maxLines: null,
           expands: true,
+          enableInteractiveSelection: true,
+          keyboardType: TextInputType.multiline,
+          textInputAction: TextInputAction.newline,
           onChanged: onChanged,
           textAlignVertical: TextAlignVertical.top,
           style: TextStyle(
@@ -374,6 +387,11 @@ class ContentField extends StatelessWidget {
             ),
             contentPadding: EdgeInsets.all(12),
           ),
+          contextMenuBuilder: (context, editableTextState) {
+            return AdaptiveTextSelectionToolbar.editableText(
+              editableTextState: editableTextState,
+            );
+          },
         ),
       ),
     );

@@ -134,7 +134,7 @@ class _PostPageState extends State<PostPage> {
               : null,
       floatingActionButtonLocation: CustomFloatingActionButtonLocation(
         offsetX: 20,
-        offsetY: 20,
+        offsetY: 80,
       ),
     );
   }
@@ -195,11 +195,12 @@ class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
 
   @override
   Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
-    final double fabX = scaffoldGeometry.scaffoldSize.width - 
-                       scaffoldGeometry.floatingActionButtonSize.width - 
-                       offsetX;
+    final double fabX =
+        scaffoldGeometry.scaffoldSize.width -
+        scaffoldGeometry.floatingActionButtonSize.width -
+        offsetX;
     final double fabY = scaffoldGeometry.contentBottom - offsetY;
-    
+
     return Offset(fabX, fabY);
   }
 }
