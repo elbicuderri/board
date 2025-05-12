@@ -21,10 +21,10 @@ class _WritePageState extends State<WritePage> {
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _discussionController.dispose();
     _titleFocusNode.dispose();
     _discussionFocusNode.dispose();
+    _titleController.dispose();
+    _discussionController.dispose();
     super.dispose();
   }
 
@@ -75,10 +75,10 @@ class _WritePageState extends State<WritePage> {
   }
 
   bool get _canSubmit =>
-      _titleController.text.trim().isNotEmpty &&
-      _discussionController.text.trim().isNotEmpty &&
       _selectedCategory != null &&
-      _selectedCategory != '카테고리 선택';
+      _selectedCategory != '카테고리 선택' &&
+      _titleController.text.trim().isNotEmpty &&
+      _discussionController.text.trim().isNotEmpty;
 
   void _submit() {
     if (_canSubmit) {
@@ -105,9 +105,9 @@ class _WritePageState extends State<WritePage> {
               onTap: onCategoryTap,
               selectedCategory: _selectedCategory,
               color: Colors.red,
-              height: 56,
               borderRadius: 16,
               padding: EdgeInsets.symmetric(horizontal: 16),
+              height: 56,
             ),
             SizedBox(height: 12),
             TitleField(
@@ -139,6 +139,7 @@ class _WritePageState extends State<WritePage> {
 class WritePageBar extends StatelessWidget {
   final bool canSubmit;
   final VoidCallback submit;
+
   const WritePageBar({
     super.key,
     required this.canSubmit,
@@ -162,7 +163,7 @@ class WritePageBar extends StatelessWidget {
               child: Text(
                 '등록',
                 style: TextStyle(
-                  color: canSubmit ? Colors.blue : Colors.green,
+                  color: canSubmit ? Colors.blue : Colors.red,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
                 ),
@@ -181,7 +182,7 @@ class CategoryField extends StatelessWidget {
   final Color color;
   final double height;
   final double borderRadius;
-  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry padding;
 
   const CategoryField({
     super.key,
@@ -190,13 +191,13 @@ class CategoryField extends StatelessWidget {
     this.color = Colors.yellow,
     this.height = 56,
     this.borderRadius = 16,
-    this.padding,
+    this.padding = EdgeInsets.zero,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? EdgeInsets.zero,
+      padding: padding,
       child: SizedBox(
         height: height,
         child: TextField(
@@ -249,7 +250,7 @@ class TitleField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final Color color;
   final double borderRadius;
-  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry padding;
   final double height;
 
   const TitleField({
@@ -259,14 +260,14 @@ class TitleField extends StatelessWidget {
     this.onChanged,
     this.color = Colors.yellow,
     this.borderRadius = 8,
-    this.padding,
+    this.padding = EdgeInsets.zero,
     this.height = 56,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: padding ?? EdgeInsets.zero,
+      padding: padding,
       child: SizedBox(
         height: height,
         child: TextField(

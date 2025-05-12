@@ -63,6 +63,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 32),
+              // id text field
               TextField(
                 controller: _idController,
                 decoration: InputDecoration(
@@ -71,6 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(height: 16),
+              // password text field
               TextField(
                 controller: _pwController,
                 obscureText: true,
@@ -84,8 +86,9 @@ class _LoginPageState extends State<LoginPage> {
                 Text(_error!, style: TextStyle(color: Colors.red)),
               ],
               SizedBox(height: 24),
+              // login button
               SizedBox(
-                width: double.infinity,
+                // width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _userData == null ? null : _login,
                   child: Text('로그인'),
