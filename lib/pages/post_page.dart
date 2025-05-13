@@ -29,6 +29,32 @@ class _PostPageState extends State<PostPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Values for responsive design based on device size
+    final Size screenSize = MediaQuery.of(context).size;
+    final double horizontalPadding = screenSize.width * 0.06;
+    final double verticalPadding = screenSize.height * 0.03;
+
+    // Set min/max padding values
+    final double minHorizontalPadding = 16.0;
+    final double maxHorizontalPadding = 32.0;
+    final double minVerticalPadding = 16.0;
+    final double maxVerticalPadding = 32.0;
+
+    // Limit padding values to the specified range
+    final double safePaddingHorizontal = horizontalPadding.clamp(
+      minHorizontalPadding,
+      maxHorizontalPadding,
+    );
+    final double safePaddingVertical = verticalPadding.clamp(
+      minVerticalPadding,
+      maxVerticalPadding,
+    );
+
+    // Responsive font size settings
+    final double titleFontSize = (screenSize.width * 0.05).clamp(18.0, 24.0);
+    final double contentFontSize = (screenSize.width * 0.04).clamp(14.0, 18.0);
+    final double categoryFontSize = (screenSize.width * 0.03).clamp(12.0, 16.0);
+
     return Scaffold(
       body: SafeArea(
         top: true,
@@ -36,12 +62,12 @@ class _PostPageState extends State<PostPage> {
         child: Column(
           children: [
             PostPageBar(),
-            SizedBox(height: 10),
+            SizedBox(height: safePaddingVertical * 0.3),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 24,
+                padding: EdgeInsets.symmetric(
+                  horizontal: safePaddingHorizontal,
+                  vertical: safePaddingVertical,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,12 +76,12 @@ class _PostPageState extends State<PostPage> {
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             widget.post.category,
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: categoryFontSize,
                               color: Colors.blueGrey,
                             ),
                           ),
@@ -64,7 +90,7 @@ class _PostPageState extends State<PostPage> {
                             child: Text(
                               widget.post.title,
                               style: TextStyle(
-                                fontSize: 22,
+                                fontSize: titleFontSize,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -73,7 +99,7 @@ class _PostPageState extends State<PostPage> {
                       ),
                     ),
                     Divider(height: 14, thickness: 1, color: Colors.red),
-                    SizedBox(height: 18),
+                    SizedBox(height: safePaddingVertical * 0.6),
                     // Use fixed width for content to ensure scrollbar position
                     Expanded(
                       child: RawScrollbar(
@@ -87,8 +113,13 @@ class _PostPageState extends State<PostPage> {
                         interactive: true,
                         child: SingleChildScrollView(
                           controller: _scrollController,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth:
+                                  screenSize.width -
+                                  (safePaddingHorizontal * 2),
+                              minHeight: 100,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -96,7 +127,7 @@ class _PostPageState extends State<PostPage> {
                                   padding: EdgeInsets.only(right: 2),
                                   child: SelectableText(
                                     widget.post.content,
-                                    style: TextStyle(fontSize: 16),
+                                    style: TextStyle(fontSize: contentFontSize),
                                     enableInteractiveSelection: true,
                                     contextMenuBuilder: (
                                       context,
@@ -108,8 +139,7 @@ class _PostPageState extends State<PostPage> {
                                     },
                                   ),
                                 ),
-                                // Add some extra space at the bottom to ensure scrollability on short content
-                                SizedBox(height: 20),
+                                SizedBox(height: safePaddingVertical),
                               ],
                             ),
                           ),
@@ -129,12 +159,19 @@ class _PostPageState extends State<PostPage> {
                 onPressed: widget.onDelete,
                 backgroundColor: Colors.red,
                 icon: Icon(Icons.delete, color: Colors.white),
-                label: Text('Delete', style: TextStyle(color: Colors.white)),
+                label: Text(
+                  'Delete',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: (screenSize.width * 0.035).clamp(12.0, 16.0),
+                  ),
+                ),
               )
               : null,
-      floatingActionButtonLocation: CustomFloatingActionButtonLocation(
-        offsetX: 20,
-        offsetY: 80,
+      floatingActionButtonLocation: ResponsiveFloatingActionButtonLocation(
+        screenSize: screenSize,
+        widthRatio: 0.1,
+        heightRatio: 0.1,
       ),
     );
   }
@@ -145,6 +182,9 @@ class PostPageBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size screenSize = MediaQuery.of(context).size;
+    final double titleFontSize = (screenSize.width * 0.05).clamp(16.0, 22.0);
+
     return Container(
       height: kToolbarHeight,
       decoration: BoxDecoration(color: Colors.yellow),
@@ -156,6 +196,10 @@ class PostPageBar extends StatelessWidget {
             child: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => Navigator.of(context).pop(),
+              iconSize: (screenSize.width * 0.06).clamp(20.0, 28.0),
+              padding: EdgeInsets.all(
+                (screenSize.width * 0.02).clamp(8.0, 16.0),
+              ),
             ),
           ),
           Align(
@@ -164,37 +208,39 @@ class PostPageBar extends StatelessWidget {
               'View Post',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 20,
+                fontSize: titleFontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          // If you need an action on the right, uncomment the code below.
-          // Align(
-          //   alignment: Alignment.centerRight,
-          //   child: IconButton(
-          //     icon: Icon(Icons.more_vert, color: Colors.white),
-          //     onPressed: () {},
-          //   ),
-          // ),
         ],
       ),
     );
   }
 }
 
-// CustomFloatingActionButtonLocation 수정
-class CustomFloatingActionButtonLocation extends FloatingActionButtonLocation {
-  final double offsetX;
-  final double offsetY;
+// FloatingActionButtonLocation that adjusts to device size
+class ResponsiveFloatingActionButtonLocation
+    extends FloatingActionButtonLocation {
+  final Size screenSize;
+  final double widthRatio; // Width ratio
+  final double heightRatio; // Height ratio
 
-  CustomFloatingActionButtonLocation({
-    required this.offsetX,
-    required this.offsetY,
+  ResponsiveFloatingActionButtonLocation({
+    required this.screenSize,
+    this.widthRatio = 0.05, // Default value
+    this.heightRatio = 0.1, // Default value
   });
 
   @override
   Offset getOffset(ScaffoldPrelayoutGeometry scaffoldGeometry) {
+    // Widen the clamp range to ensure ratio changes have a visible effect
+    final double offsetX = (screenSize.width * widthRatio).clamp(10.0, 100.0);
+    final double offsetY = (screenSize.height * heightRatio).clamp(20.0, 200.0);
+
+    // print('offsetX: $offsetX, offsetY: $offsetY');
+    // print('widthRatio: $widthRatio, heightRatio: $heightRatio');
+
     final double fabX =
         scaffoldGeometry.scaffoldSize.width -
         scaffoldGeometry.floatingActionButtonSize.width -
