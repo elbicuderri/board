@@ -1,6 +1,35 @@
 import 'package:flutter/material.dart';
 import 'post_list_page.dart';
 
+// 반응형 UI를 위한 도우미 클래스
+class PostPageResponsiveUI {
+  final BuildContext context;
+  final Size screenSize;
+
+  PostPageResponsiveUI(this.context) : screenSize = MediaQuery.of(context).size;
+
+  // 패딩 계산 메서드
+  double get horizontalPadding => (screenSize.width * 0.06).clamp(16.0, 32.0);
+  double get verticalPadding => (screenSize.height * 0.03).clamp(16.0, 32.0);
+
+  // 폰트 크기 계산 메서드
+  double get titleFontSize => (screenSize.width * 0.05).clamp(18.0, 24.0);
+  double get contentFontSize => (screenSize.width * 0.04).clamp(14.0, 18.0);
+  double get categoryFontSize => (screenSize.width * 0.03).clamp(12.0, 16.0);
+  double get buttonFontSize => (screenSize.width * 0.035).clamp(12.0, 16.0);
+
+  // UI 요소 크기 계산 메서드
+  double get deleteButtonHeight => (screenSize.height * 0.07).clamp(50.0, 70.0);
+  double get contentMinHeight => (screenSize.height * 0.15).clamp(100.0, 200.0);
+  double get dividerSpacing => verticalPadding * 0.6;
+  double get headerIconSize => (screenSize.width * 0.06).clamp(20.0, 28.0);
+  double get headerIconPadding => (screenSize.width * 0.02).clamp(8.0, 16.0);
+
+  // FAB 위치 계산을 위한 비율
+  double get fabWidthRatio => 0.1;
+  double get fabHeightRatio => 0.1;
+}
+
 class PostPage extends StatefulWidget {
   final Post post;
   final String loggedInId;
@@ -29,31 +58,8 @@ class _PostPageState extends State<PostPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Values for responsive design based on device size
-    final Size screenSize = MediaQuery.of(context).size;
-    final double horizontalPadding = screenSize.width * 0.06;
-    final double verticalPadding = screenSize.height * 0.03;
-
-    // Set min/max padding values
-    final double minHorizontalPadding = 16.0;
-    final double maxHorizontalPadding = 32.0;
-    final double minVerticalPadding = 16.0;
-    final double maxVerticalPadding = 32.0;
-
-    // Limit padding values to the specified range
-    final double safePaddingHorizontal = horizontalPadding.clamp(
-      minHorizontalPadding,
-      maxHorizontalPadding,
-    );
-    final double safePaddingVertical = verticalPadding.clamp(
-      minVerticalPadding,
-      maxVerticalPadding,
-    );
-
-    // Responsive font size settings
-    final double titleFontSize = (screenSize.width * 0.05).clamp(18.0, 24.0);
-    final double contentFontSize = (screenSize.width * 0.04).clamp(14.0, 18.0);
-    final double categoryFontSize = (screenSize.width * 0.03).clamp(12.0, 16.0);
+    // 반응형 UI 설정
+    final PostPageResponsiveUI responsive = PostPageResponsiveUI(context);
 
     return Scaffold(
       body: SafeArea(
@@ -61,13 +67,13 @@ class _PostPageState extends State<PostPage> {
         bottom: true,
         child: Column(
           children: [
-            PostPageBar(),
-            SizedBox(height: safePaddingVertical * 0.3),
+            PostPageBar(responsive: responsive),
+            SizedBox(height: responsive.verticalPadding * 0.3),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: safePaddingHorizontal,
-                  vertical: safePaddingVertical,
+                  horizontal: responsive.horizontalPadding,
+                  vertical: responsive.verticalPadding,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,7 +87,7 @@ class _PostPageState extends State<PostPage> {
                           Text(
                             widget.post.category,
                             style: TextStyle(
-                              fontSize: categoryFontSize,
+                              fontSize: responsive.categoryFontSize,
                               color: Colors.blueGrey,
                             ),
                           ),
@@ -90,7 +96,7 @@ class _PostPageState extends State<PostPage> {
                             child: Text(
                               widget.post.title,
                               style: TextStyle(
-                                fontSize: titleFontSize,
+                                fontSize: responsive.titleFontSize,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -99,7 +105,7 @@ class _PostPageState extends State<PostPage> {
                       ),
                     ),
                     Divider(height: 14, thickness: 1, color: Colors.red),
-                    SizedBox(height: safePaddingVertical * 0.6),
+                    SizedBox(height: responsive.dividerSpacing),
                     // Use fixed width for content to ensure scrollbar position
                     Expanded(
                       child: RawScrollbar(
@@ -116,9 +122,9 @@ class _PostPageState extends State<PostPage> {
                           child: ConstrainedBox(
                             constraints: BoxConstraints(
                               minWidth:
-                                  screenSize.width -
-                                  (safePaddingHorizontal * 2),
-                              minHeight: 100,
+                                  responsive.screenSize.width -
+                                  (responsive.horizontalPadding * 2),
+                              minHeight: responsive.contentMinHeight,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,7 +133,10 @@ class _PostPageState extends State<PostPage> {
                                   padding: EdgeInsets.only(right: 2),
                                   child: SelectableText(
                                     widget.post.content,
-                                    style: TextStyle(fontSize: contentFontSize),
+                                    style: TextStyle(
+                                      fontSize: responsive.contentFontSize,
+                                      height: 1.5,
+                                    ),
                                     enableInteractiveSelection: true,
                                     contextMenuBuilder: (
                                       context,
@@ -139,7 +148,7 @@ class _PostPageState extends State<PostPage> {
                                     },
                                   ),
                                 ),
-                                SizedBox(height: safePaddingVertical),
+                                SizedBox(height: responsive.verticalPadding),
                               ],
                             ),
                           ),
@@ -155,36 +164,38 @@ class _PostPageState extends State<PostPage> {
       ),
       floatingActionButton:
           (widget.post.author == widget.loggedInId && widget.onDelete != null)
-              ? FloatingActionButton.extended(
-                onPressed: widget.onDelete,
-                backgroundColor: Colors.red,
-                icon: Icon(Icons.delete, color: Colors.white),
-                label: Text(
-                  'Delete',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: (screenSize.width * 0.035).clamp(12.0, 16.0),
+              ? SizedBox(
+                height: responsive.deleteButtonHeight,
+                child: FloatingActionButton.extended(
+                  onPressed: widget.onDelete,
+                  backgroundColor: Colors.red,
+                  icon: Icon(Icons.delete, color: Colors.white),
+                  label: Text(
+                    'Delete',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: responsive.buttonFontSize,
+                    ),
                   ),
                 ),
               )
               : null,
       floatingActionButtonLocation: ResponsiveFloatingActionButtonLocation(
-        screenSize: screenSize,
-        widthRatio: 0.1,
-        heightRatio: 0.1,
+        screenSize: responsive.screenSize,
+        widthRatio: responsive.fabWidthRatio,
+        heightRatio: responsive.fabHeightRatio,
       ),
     );
   }
 }
 
 class PostPageBar extends StatelessWidget {
-  const PostPageBar({super.key});
+  final PostPageResponsiveUI responsive;
+
+  const PostPageBar({super.key, required this.responsive});
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-    final double titleFontSize = (screenSize.width * 0.05).clamp(16.0, 22.0);
-
     return Container(
       height: kToolbarHeight,
       decoration: BoxDecoration(color: Colors.yellow),
@@ -196,10 +207,8 @@ class PostPageBar extends StatelessWidget {
             child: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => Navigator.of(context).pop(),
-              iconSize: (screenSize.width * 0.06).clamp(20.0, 28.0),
-              padding: EdgeInsets.all(
-                (screenSize.width * 0.02).clamp(8.0, 16.0),
-              ),
+              iconSize: responsive.headerIconSize,
+              padding: EdgeInsets.all(responsive.headerIconPadding),
             ),
           ),
           Align(
@@ -208,7 +217,7 @@ class PostPageBar extends StatelessWidget {
               'View Post',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: titleFontSize,
+                fontSize: responsive.titleFontSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -237,9 +246,6 @@ class ResponsiveFloatingActionButtonLocation
     // Widen the clamp range to ensure ratio changes have a visible effect
     final double offsetX = (screenSize.width * widthRatio).clamp(10.0, 100.0);
     final double offsetY = (screenSize.height * heightRatio).clamp(20.0, 200.0);
-
-    // print('offsetX: $offsetX, offsetY: $offsetY');
-    // print('widthRatio: $widthRatio, heightRatio: $heightRatio');
 
     final double fabX =
         scaffoldGeometry.scaffoldSize.width -
